@@ -22,21 +22,46 @@
 
         /* Fullscreen overlay */
         #overlay {
-            position: fixed; display: none; top:0; left:0; width:100%; height:100%;
-            background: rgba(0,0,0,0.8); justify-content:center; align-items:center;
+            position: fixed;
+            display: none;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background: rgba(0,0,0,0.8);
+            justify-content:center;
+            align-items:center;
             z-index: 1000;
         }
-        #overlay img { max-width:90%; max-height:90%; border-radius:10px; }
+        #overlay img {
+            max-width:90%;
+            max-height:90%;
+            border-radius:10px;
+        }
         #watermark {
-            position: absolute; bottom:10px; right:10px; color:white; font-size:20px;
-            opacity:0.7; background: rgba(0,0,0,0.3); padding:5px 10px; border-radius:5px;
+            position: absolute;
+            bottom:10px;
+            right:10px;
+            color:white;
+            font-size:20px;
+            opacity:0.7;
+            background: rgba(0,0,0,0.3);
+            padding:5px 10px;
+            border-radius:5px;
         }
         #downloadBtn {
-            position:absolute; top:10px; right:10px; padding:10px 15px; font-size:16px; border:none;
-            border-radius:5px; background:orange; color:white; cursor:pointer;
+            position:absolute;
+            top:10px;
+            right:10px;
+            padding:10px 15px;
+            font-size:16px;
+            border:none;
+            border-radius:5px;
+            background:orange;
+            color:white;
+            cursor:pointer;
         }
 
-        /* Footer styling */
         footer {
             text-align: center;
             font-size: 18px;
@@ -45,7 +70,6 @@
             padding: 10px 0;
         }
 
-        /* YouTube link styling */
         a.youtube-link {
             color: #FF0000;
             text-decoration: none;
@@ -58,16 +82,20 @@
 </head>
 <body>
 
-<!-- Header with YouTube channel link -->
 <h1>Hello Q Spark 🔥</h1>
-<p>Visit my YouTube Channel: 
-   <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">Q-Spark</a>
+<p>
+    Visit my YouTube Channel:
+    <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">
+        Q-Spark
+    </a>
 </p>
 <p>Click on an image to zoom & download</p>
 
-<!-- Multiple images from Flask -->
+<!-- ✅ IMAGES (IMPORTANT FIX) -->
 {% for quote in quotes %}
-    <img src="{{ url_for('static', filename='images/' + quote) }}" onclick="openOverlay('{{ quote }}')">
+    <img 
+        src="{{ url_for('static', filename='images/' + quote) }}" 
+        onclick="openOverlay('{{ quote }}')">
 {% endfor %}
 
 <!-- Fullscreen overlay -->
@@ -77,9 +105,11 @@
     <button id="downloadBtn" onclick="downloadImage(event)">Download</button>
 </div>
 
-<!-- Footer with YouTube link -->
 <footer>
-    Created by <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">Dheeraj (D.V.K._YT)</a>
+    Created by 
+    <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">
+        Dheeraj (D.V.K._YT)
+    </a>
 </footer>
 
 <script>
@@ -87,7 +117,10 @@
 
     function openOverlay(filename){
         currentFile = filename;
-        document.getElementById('overlayImg').src = '/static/images/' + filename;
+        // ✅ FIX: static path
+        document.getElementById('overlayImg').src =
+            "{{ url_for('static', filename='images/') }}" + filename;
+
         document.getElementById('overlay').style.display = 'flex';
     }
 
@@ -96,10 +129,11 @@
     }
 
     function downloadImage(event){
-        event.stopPropagation(); // prevent closing overlay
+        event.stopPropagation();
         window.location.href = '/download/' + currentFile;
     }
 </script>
 
 </body>
 </html>
+
