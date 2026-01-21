@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Q Spark Quotes</title>
+    <style>
+        body { 
+            font-family: Arial; 
+            text-align: center; 
+            margin: 20px; 
+            background-color: #f9f9f9;
+        }
+        img { 
+            width: 200px; 
+            margin: 10px; 
+            border-radius: 10px; 
+            cursor: pointer; 
+            transition: transform 0.2s; 
+        }
+        img:hover { 
+            transform: scale(1.05); 
+        }
+
+        /* Fullscreen overlay */
+        #overlay {
+            position: fixed; display: none; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.8); justify-content:center; align-items:center;
+            z-index: 1000;
+        }
+        #overlay img { max-width:90%; max-height:90%; border-radius:10px; }
+        #watermark {
+            position: absolute; bottom:10px; right:10px; color:white; font-size:20px;
+            opacity:0.7; background: rgba(0,0,0,0.3); padding:5px 10px; border-radius:5px;
+        }
+        #downloadBtn {
+            position:absolute; top:10px; right:10px; padding:10px 15px; font-size:16px; border:none;
+            border-radius:5px; background:orange; color:white; cursor:pointer;
+        }
+
+        /* Footer styling */
+        footer {
+            text-align: center;
+            font-size: 18px;
+            color: #555;
+            margin-top: 30px;
+            padding: 10px 0;
+        }
+
+        /* YouTube link styling */
+        a.youtube-link {
+            color: #FF0000;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a.youtube-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header with YouTube channel link -->
+<h1>Hello Q Spark 🔥</h1>
+<p>Visit my YouTube Channel: 
+   <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">Q-Spark</a>
+</p>
+<p>Click on an image to zoom & download</p>
+
+<!-- Multiple images from Flask -->
+{% for quote in quotes %}
+    <img src="{{ url_for('static', filename='images/' + quote) }}" onclick="openOverlay('{{ quote }}')">
+{% endfor %}
+
+<!-- Fullscreen overlay -->
+<div id="overlay" onclick="closeOverlay()">
+    <img id="overlayImg">
+    <div id="watermark">Q-Spark07</div>
+    <button id="downloadBtn" onclick="downloadImage(event)">Download</button>
+</div>
+
+<!-- Footer with YouTube link -->
+<footer>
+    Created by <a href="https://www.youtube.com/@Q-spark07" target="_blank" class="youtube-link">Dheeraj (D.V.K._YT)</a>
+</footer>
+
+<script>
+    let currentFile = '';
+
+    function openOverlay(filename){
+        currentFile = filename;
+        document.getElementById('overlayImg').src = '/static/images/' + filename;
+        document.getElementById('overlay').style.display = 'flex';
+    }
+
+    function closeOverlay(){
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    function downloadImage(event){
+        event.stopPropagation(); // prevent closing overlay
+        window.location.href = '/download/' + currentFile;
+    }
+</script>
+
+</body>
+</html>
