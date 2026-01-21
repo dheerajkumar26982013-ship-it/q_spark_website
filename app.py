@@ -1,25 +1,36 @@
 import os
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, send_from_directory
 
-# Flask app create kar rahe hain
 app = Flask(__name__)
 
-# Example route: Home page
-@app.route('/')
+# ===== Home Page =====
+@app.route("/")
 def home():
-    return render_template('index.html')  # agar tumhara index.html templates folder me hai
+    # static/images folder se saari images read karo
+    images_path = os.path.join(app.static_folder, "images")
 
-# Example route: Another page
-@app.route('/download')
-def download_quotes():
-    # yahan tumhara quotes download logic hoga
-    return "Download your quotes here!"
+    quotes = []
+    if os.path.exists(images_path):
+        quotes = [
+            img for img in os.listdir(images_path)
+            if img.lower().endswith((".jpg", ".png", ".jpeg", ".webp"))
+        ]
 
-# Aur agar aur routes hain, wo yahan add karo
+    return render_template("index.html", quotes=quotes)
 
-# ======= Last line for Render deployment =======
+
+# ===== Download Image =====
+@app.route("/download/<filename>")
+def download(filename):
+    return send_from_directory(
+        directory=os.path.join(app.static_folder, "images"),
+        path=filename,
+        as_attachment=True
+    )
+
+
+# ===== Render ke liye IMPORTANT =====
 if __name__ == "__main__":
-    # Render ke liye host aur port setup
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)
 
