@@ -29,8 +29,10 @@ def download(filename):
     )
 
 
-# ===== Render ke liye IMPORTANT =====
+# ===== Render Deployment Fix (IMPORTANT) =====
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    # Render apna PORT deta hai — wahi use karna zaroori hai
+    port = int(os.environ.get("PORT", 10000))
 
+    # 0.0.0.0 zaroor likhna hota hai Render ke liye
+    app.run(host="0.0.0.0", port=port, debug=False)
